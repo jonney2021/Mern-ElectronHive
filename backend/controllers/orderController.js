@@ -109,6 +109,67 @@ const getOrders = asyncHandler(async (req, res) => {
   res.status(200).json(orders);
 });
 
+// Analytics function to get data by date
+const getAnalyticsByDate = async (req, res) => {
+  try {
+    const { date } = req.query;
+    console.log(`Received date parameter: ${date}`); // Log received date parameter
+    const startDate = new Date(date);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 1);
+
+    const orders = await Order.aggregate([
+      {
+        $match: {
+          paidAt: { $gte: startDate, $lt: endDate },
+          isPaid: true,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            // Group by hour
+            // hour: { $hour: "$createdAt", timezone: "America/New_York" },
+            // hour: { $hour: "$paidAt" },
+            hour: { $hour: { date: "$paidAt", timezone: "America/Toronto" } },
+          },
+          totalRevenue: { $sum: "$totalPrice" }, // Sum up the total price for revenue
+        },
+      },
+      {
+        $sort: { "_id.hour": 1 }, // Sort by hour
+      },
+    ]);
+
+    console.log(`Orders found:`, orders); // Log the raw results of the aggregation
+
+    // // Transform the data to fit the chart's expected format
+    // const analyticsData = orders.map((order) => ({
+    //   time: `${order._id.hour}:00`, // Format the time as a string with the hour
+    //   revenue: order.totalRevenue,
+    // }));
+
+    // Initialize an array with 24 hours and zero revenue
+    let analyticsData = new Array(24).fill().map((_, index) => ({
+      time: `${index}:00`,
+      revenue: 0,
+    }));
+
+    // Populate the analytics data with actual revenue numbers
+    orders.forEach((order) => {
+      const hourIndex = order._id.hour;
+      analyticsData[hourIndex].revenue = order.totalRevenue;
+    });
+
+    console.log(`Analytics data:`, analyticsData); // Log the final data being sent to the front end
+
+    res.json(analyticsData);
+  } catch (error) {
+    console.error("Error fetching analytics data:", error);
+    res.status(500).json({ message: "Failed to fetch analytics data" });
+  }
+};
+
 export {
   addOrderItems,
   getMyOrders,
@@ -116,4 +177,5 @@ export {
   updateOrderToPaid,
   updateOrderToDelivered,
   getOrders,
+  getAnalyticsByDate,
 };

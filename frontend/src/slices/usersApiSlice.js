@@ -17,6 +17,23 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    verifyOtp: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/verify-otp`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // Add the resendEmailVerificationToken endpoint
+    resendEmailVerificationToken: builder.mutation({
+      query: (email) => ({
+        url: `${USERS_URL}/resend-email-verification`,
+        method: "POST",
+        body: { email },
+      }),
+    }),
+
     logout: builder.mutation({
       query: () => ({
         url: `${USERS_URL}/logout`,
@@ -64,6 +81,8 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
+  useVerifyOtpMutation,
+  useResendEmailVerificationTokenMutation,
   useProfileMutation,
   useGetUsersQuery,
   useDeleteUserMutation,
