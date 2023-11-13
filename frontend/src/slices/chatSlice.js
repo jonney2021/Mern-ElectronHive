@@ -18,29 +18,8 @@ const chatSlice = createSlice({
         state.chatRooms[userId].messages.push(message);
       }
     },
-
-    // initializeChatHistory: (state, action) => {
-    //   // Assuming action.payload is an object with keys as userIds
-    //   // and values as arrays of messages
-    //   Object.entries(action.payload).forEach(([userId, chatData]) => {
-    //     if (!state.chatRooms[userId]) {
-    //       state.chatRooms[userId] = {
-    //         userName: chatData.userName,
-    //         messages: [...chatData.messages],
-    //       };
-    //     } else {
-    //       // If chat room already exists, concatenate the messages
-    //       state.chatRooms[userId].messages = [
-    //         ...state.chatRooms[userId].messages,
-    //         ...chatData.messages,
-    //       ];
-    //     }
-    //   });
-    // },
-    // Add more reducers as needed, e.g., to create new chat room, close chat room, etc.
   },
 });
 
-// export const { addMessage, initializeChatHistory } = chatSlice.actions;
 export const { addMessage } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -228,6 +228,7 @@ const AdminChat = () => {
                   id={`messageInput-${userId}`}
                   onKeyUp={(e) => handleKeyPress(e, userId)}
                   placeholder="Type your message here..."
+                  style={{ resize: "none" }}
                 />
               </Form.Group>
               <Button
