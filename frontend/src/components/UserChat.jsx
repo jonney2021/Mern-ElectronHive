@@ -19,6 +19,7 @@ const UserChat = () => {
 
   useEffect(() => {
     if (userInfo && !userInfo?.isAdmin) {
+      var audio = new Audio("/audio/chat-msg.mp3");
       const socket = socketIOClient();
 
       socket.emit("join room", userInfo?._id);
@@ -36,6 +37,7 @@ const UserChat = () => {
           })
         );
         setMessageReceived(true);
+        audio.play();
       });
 
       setSocket(socket);

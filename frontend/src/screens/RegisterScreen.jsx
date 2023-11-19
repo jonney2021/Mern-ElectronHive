@@ -86,6 +86,7 @@ const RegisterScreen = () => {
             placeholder="Enter Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            autoFocus
           ></Form.Control>
         </Form.Group>
         <Form.Group controlId="email" className="my-3">

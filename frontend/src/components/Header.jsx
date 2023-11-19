@@ -41,12 +41,18 @@ const Header = () => {
 
   useEffect(() => {
     if (userInfo?.isAdmin) {
+      var audio = new Audio("/audio/chat-msg.mp3");
       const socket = socketIOClient();
+      // socket.emit(
+      //   "admin connected with server",
+      //   "Admin" + Math.floor(Math.random() * 1000000000000)
+      // );
       // socket.on("server sends message from client to admin", (data) => {
       socket.on("new user message", (data) => {
         console.log("New message received for admin:", data);
         if (data && data.userId) {
           dispatch(setMessageReceived({ userId: data.userId }));
+          audio.play();
         }
       });
       return () => socket.disconnect();
@@ -65,8 +71,8 @@ const Header = () => {
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
-              <img src={logo} alt="Proshop" />
-              ProShop
+              <img src={logo} alt="BestShop" />
+              BestShop
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

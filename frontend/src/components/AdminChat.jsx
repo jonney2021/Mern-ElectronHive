@@ -170,7 +170,12 @@ const AdminChat = () => {
                         : ""
                     }
                   >
-                    <b>{msg.sender === "admin" ? "You" : "User"} wrote:</b>{" "}
+                    <b>
+                      {msg.sender === "admin"
+                        ? "You"
+                        : chatRooms[userId].userName}{" "}
+                      wrote:
+                    </b>{" "}
                     {msg.content}
                   </p>
                 ))}

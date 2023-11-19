@@ -22,6 +22,8 @@ const app = express();
 const httpServer = createServer(app);
 global.io = new Server(httpServer);
 
+const admins = [];
+
 // io.on("connection", (socket) => {
 //   socket.on("client sends message", (msg) => {
 //     socket.broadcast.emit("server sends message from client to admin", {
@@ -35,6 +37,10 @@ const pendingMessages = {};
 
 io.on("connection", (socket) => {
   console.log("New WebSocket connection");
+  socket.on("admin connected with server", (adminName) => {
+    admins.push({ id: socket.id, admin: adminName });
+    console.log(admins);
+  });
 
   // Join the admin to a special 'adminChannel'
   socket.on("admin online", () => {

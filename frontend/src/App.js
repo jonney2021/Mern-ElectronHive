@@ -6,12 +6,14 @@ import { Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserChat from "./components/UserChat";
+import { useSelector } from "react-redux";
 // import useWebSocket from "./useWebSocket";
 // import { useSelector } from "react-redux";
 
 const App = () => {
   const location = useLocation(); // Get the current location
   const isAdminRoute = location.pathname.includes("/admin"); // Check if it's an admin route
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   // const userInfo = useSelector((state) => state.auth.userInfo);
 
@@ -50,7 +52,8 @@ const App = () => {
           <Outlet />
         </Container>
       </main>
-      {!isAdminRoute && <UserChat />} {/* Conditionally render UserChat */}
+      {!isAdminRoute && userInfo && <UserChat />}{" "}
+      {/* Conditionally render UserChat */}
       <Footer />
       <ToastContainer />
     </>

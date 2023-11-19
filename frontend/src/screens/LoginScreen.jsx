@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,22 +44,44 @@ const LoginScreen = () => {
       <h1>Sign In</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="email" className="my-3">
-          <Form.Label>Email Address</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoFocus
           ></Form.Control>
         </Form.Group>
-        <Form.Group controlId="password" className="my-3">
+        <Form.Group controlId="password" className="my-3 position-relative">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            type="password"
+            // type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
+
+          <Button
+            variant="outline-secondary"
+            onClick={() => setShowPassword(!showPassword)}
+            // className="position-absolute end-0 top-0 mt-2 me-2"
+            className="toggle-password-button"
+            style={{
+              position: "absolute",
+              top: "70%", // Center vertically
+              // right: "10px", // Space from the right edge
+              right: "0.75rem",
+              transform: "translateY(-50%)", // Center vertically
+              border: "none", // Optional: removes the border
+              background: "none", // Optional: makes the button background transparent
+              padding: "0", // Removes padding to fit the button neatly
+            }}
+            // style={{ zIndex: 10 }}
+          >
+            <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+          </Button>
         </Form.Group>
         <Button
           type="submit"
