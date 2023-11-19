@@ -9,7 +9,8 @@ import {
 } from "react-bootstrap";
 import SearchBox from "./SearchBox";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
+import logo from "../assets/ElectronHive_logo.png";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../slices/usersApiSlice";
@@ -72,7 +73,7 @@ const Header = () => {
           <LinkContainer to="/">
             <Navbar.Brand>
               <img src={logo} alt="BestShop" />
-              BestShop
+              {/* BestShop */}
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
