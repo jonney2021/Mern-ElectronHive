@@ -37,6 +37,19 @@ import VerificationPage from "./screens/VerificationPage";
 import AdminAnalyticsPage from "./screens/admin/AnalysticsPage";
 import ChatPage from "./screens/admin/ChatPage";
 
+// import io from "socket.io-client";
+
+// const socket = io("http://localhost:3000", {
+//   reconnection: true,
+//   reconnectionAttempts: Infinity,
+//   reconnectionDelay: 1000,
+// });
+
+// socket.on("connect", () => {
+//   console.log("Connected to WebSocket server");
+//   // Additional event listeners
+// });
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>

@@ -42,7 +42,8 @@ const Header = () => {
   useEffect(() => {
     if (userInfo?.isAdmin) {
       const socket = socketIOClient();
-      socket.on("server sends message from client to admin", (data) => {
+      // socket.on("server sends message from client to admin", (data) => {
+      socket.on("new user message", (data) => {
         console.log("New message received for admin:", data);
         if (data && data.userId) {
           dispatch(setMessageReceived({ userId: data.userId }));
@@ -51,10 +52,12 @@ const Header = () => {
       return () => socket.disconnect();
     }
   }, [userInfo?.isAdmin, dispatch]);
+
   const hasUnreadMessages = Object.values(unreadMessages).some(
     (status) => status
   );
   console.log("hasUnreadMessages", hasUnreadMessages);
+  console.log("userInfo", userInfo);
 
   return (
     <header>

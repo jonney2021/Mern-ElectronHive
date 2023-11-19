@@ -30,36 +30,70 @@ global.io = new Server(httpServer);
 //   });
 // });
 
+// Create a global variable to store pending messages for admins
+const pendingMessages = {};
+
 io.on("connection", (socket) => {
   console.log("New WebSocket connection");
+
+  // Join the admin to a special 'adminChannel'
+  socket.on("admin online", () => {
+    socket.join("adminChannel");
+
+    // Emit pending messages for each user to admin
+    Object.keys(pendingMessages).forEach((userId) => {
+      pendingMessages[userId].forEach((message) => {
+        socket.emit("new user message", message);
+      });
+      delete pendingMessages[userId]; // Clear after sending
+    });
+  });
+
+  // socket.on("admin offline", (data) => {
+  //   const adminId = data.adminId;
+  //   socket.leave("adminChannel");
+  //   // Optional: Handle admin offline event, e.g., logging, updating status
+  // });
 
   socket.on("join room", (userId) => {
     socket.join(userId);
   });
 
   socket.on("client sends message", async (data) => {
-    // Create mock request and response objects
-    const mockReq = { body: data };
-    const mockRes = {
-      status: () => ({ json: () => {} }),
-    };
+    console.log(`Received message from user ${data.userId}: ${data.message}`);
+    // Check if the admin is connected
+    const adminSocket = io.sockets.adapter.rooms.get("adminChannel");
 
-    try {
-      await addChatMessage(mockReq, mockRes);
+    if (adminSocket && adminSocket.size > 0) {
+      // Admin is connected, send the message
+      // io.to("adminChannel").emit("new user message", data);
+      io.emit("new user message", data);
+    } else {
+      // Admin is not connected, store the message in pendingMessages
+      if (!pendingMessages[data.userId]) {
+        pendingMessages[data.userId] = [];
+      }
+      pendingMessages[data.userId].push(data);
 
-      // Log the data being sent to the admin
-      console.log("Broadcasting to admin:", data);
-      // io.emit("server sends message from client to admin", data);
-      io.emit("server sends message from client to admin", {
-        userId: data.userId,
-        ...data,
-      });
-      // socket.broadcast.emit("server sends message from client to admin", data);
-      // socket.emit("user receives message", data);
-    } catch (error) {
-      console.error("Error handling message: ", error);
-      // Handle error appropriately
+      // // Emit the "new user message" event to the admin
+      io.emit("new user message", data);
+
+      // Here, you can also emit a custom event to notify the admin
+      // that there are pending messages for them. For example:
+      // io.to(data.userId).emit("admin_pending_messages", {
+      //   hasPendingMessages: true,
+      // });
     }
+  });
+
+  socket.on("admin reconnects", () => {
+    // Iterate over all pending messages and send them to the admin
+    Object.keys(pendingMessages).forEach((userId) => {
+      pendingMessages[userId].forEach((message) => {
+        socket.emit("new user message", message);
+      });
+      delete pendingMessages[userId]; // Clear after sending
+    });
   });
 
   socket.on("admin sends message", async (data) => {
@@ -76,6 +110,12 @@ io.on("connection", (socket) => {
       // Handle error appropriately
     }
   });
+
+  // // Optional: Disconnect event handler
+  // socket.on("disconnect", () => {
+  //   console.log("WebSocket disconnected");
+  //   // Handle disconnection
+  // });
 });
 
 // Body parser middleware
