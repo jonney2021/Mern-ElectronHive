@@ -1,5 +1,7 @@
 # ElectronHive eCommerce Platform
 
+<img src="./frontend/public/images/website.jpg">
+
 > eCommerce platform built with the MERN stack & Redux Toolkit.
 > This project has a full-featured shopping cart with PayPal & credit/debit payments.
 > Advanced features: Email-verification with OTP, Real-time chat, Charts used to compare with different dates' sale.
