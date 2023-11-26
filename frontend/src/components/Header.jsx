@@ -20,6 +20,7 @@ import socketIOClient from "socket.io-client";
 import { useEffect } from "react";
 import { setMessageReceived } from "../slices/unreadMessagesSlice";
 import "../../src/chats.css";
+import { resetCart } from "../slices/cartSlice";
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
@@ -35,6 +36,7 @@ const Header = () => {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
+      dispatch(resetCart());
       navigate("/login");
     } catch (error) {
       console.log(error);
