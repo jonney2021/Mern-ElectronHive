@@ -152,6 +152,7 @@ app.use(errorHandler);
 const port = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV === "production") {
+  // set static folder
   app.use(express.static(path.join(__dirname, "/frontend/build")));
 
   // any route that is not api will be redirected
