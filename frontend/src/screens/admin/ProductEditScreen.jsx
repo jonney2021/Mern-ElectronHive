@@ -167,10 +167,13 @@ const ProductEditScreen = () => {
             <Form.Group controlId="description" className="my-2">
               <Form.Label>Description</Form.Label>
               <Form.Control
-                type="text"
+                // type="text"
+                as="textarea"
                 placeholder="Enter description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                style={{ resize: "none" }}
               ></Form.Control>
             </Form.Group>
 

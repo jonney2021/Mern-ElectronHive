@@ -10,7 +10,8 @@ import {
 import SearchBox from "./SearchBox";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 // import logo from "../assets/logo.png";
-import logo from "../assets/ElectronHive_logo.png";
+// import logo from "../assets/ElectronHive_logo.png";
+import logo from "../assets/ElectronHive_White logo.png";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../slices/usersApiSlice";
@@ -72,8 +73,12 @@ const Header = () => {
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
-              <img src={logo} alt="BestShop" />
-              {/* BestShop */}
+              <img
+                src={logo}
+                alt="ElectronHive"
+                style={{ width: "auto", height: "50px" }}
+              />
+              {/* ElectronHive */}
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
