@@ -11,24 +11,24 @@ export const generateOTP = (otp_length = 6) => {
 };
 
 // Mailtrap
-export const generateMailTransport = () =>
-  nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-      user: process.env.MAIL_TRAP_USER,
-      pass: process.env.MAIL_TRAP_PASS,
-    },
-  });
-
-// Gmail SMTP
 // export const generateMailTransport = () =>
 //   nodemailer.createTransport({
-//     host: "smtp.gmail.com", // replace with your SMTP server address
-//     port: 465, // replace with your SMTP server port
-//     secure: true, // use SSL
+//     host: "sandbox.smtp.mailtrap.io",
+//     port: 2525,
 //     auth: {
-//       user: process.env.MAIL_TRAP_USER, // replace with your email address
-//       pass: process.env.MAIL_TRAP_PASS, // replace with your email password
+//       user: process.env.MAIL_TRAP_USER,
+//       pass: process.env.MAIL_TRAP_PASS,
 //     },
 //   });
+
+// Gmail SMTP
+export const generateMailTransport = () =>
+  nodemailer.createTransport({
+    host: "smtp.gmail.com", // replace with your SMTP server address
+    port: 465, // replace with your SMTP server port
+    secure: true, // use SSL
+    auth: {
+      user: process.env.MAIL_TRAP_USER, // replace with your email address
+      pass: process.env.MAIL_TRAP_PASS, // replace with your email password
+    },
+  });
