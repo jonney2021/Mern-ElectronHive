@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jonney2021/Mern-proshop.git"
+    "url": "git+https://github.com/jonney2021/Mern-ElectronHive.git"
   },
   "author": "Yeming",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jonney2021/Mern-proshop/issues"
+    "url": "https://github.com/jonney2021/Mern-ElectronHive/issues"
   },
-  "homepage": "https://github.com/jonney2021/Mern-proshop#readme",
+  "homepage": "https://github.com/jonney2021/Mern-ElectronHive#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",

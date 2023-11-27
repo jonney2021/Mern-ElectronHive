@@ -155,8 +155,15 @@ if (process.env.NODE_ENV === "production") {
   // set static folder
   app.use(express.static(path.join(__dirname, "/frontend/build")));
 
+  // Log middleware
+  app.use((req, res, next) => {
+    console.log("Middleware Log:", req.url);
+    next();
+  });
+
   // any route that is not api will be redirected
   app.get("*", (req, res) => {
+    console.log("Wildcard route hit:", req.url);
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
 } else {
