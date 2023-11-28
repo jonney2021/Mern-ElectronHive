@@ -125,8 +125,8 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
   // Send welcome email
   const welcomeEmailOptions = {
-    from: process.env.EMAIL_USERNAME,
-    to: email,
+    from: process.env.EMAIL_SENDER,
+    to: user.email,
     subject: "Welcome to Our Application!",
     html: `<h1>Welcome ${user.name}!</h1><p>Your email has been successfully verified.</p>`,
   };
