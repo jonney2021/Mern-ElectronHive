@@ -39,6 +39,14 @@ const LoginScreen = () => {
       toast.error(error?.data?.message || error.error);
     }
   };
+
+  // const handleForgotPassword = () => {
+  //   // Debug logging to check the value of email before constructing the link
+  //   console.log("Email before constructing forgot password link:", email);
+
+  //   // Redirect to the forgot password page with the user's email as a query parameter
+  //   navigate(`/forgot-password`, { state: { email } });
+  // };
   return (
     <FormContainer>
       <h1>Sign In</h1>
@@ -99,6 +107,9 @@ const LoginScreen = () => {
           <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
             Register
           </Link>
+        </Col>
+        <Col className="text-end">
+          <Link to="/forgot-password">Forgot Password?</Link>
         </Col>
       </Row>
     </FormContainer>

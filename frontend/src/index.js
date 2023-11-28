@@ -36,6 +36,8 @@ import UserEditScreen from "./screens/admin/UserEditScreen";
 import VerificationPage from "./screens/VerificationPage";
 import AdminAnalyticsPage from "./screens/admin/AnalysticsPage";
 import ChatPage from "./screens/admin/ChatPage";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
+import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 
 // import io from "socket.io-client";
 
@@ -65,6 +67,11 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
       <Route path="/verification" element={<VerificationPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
+      <Route
+        path="/reset-password/:resetToken"
+        element={<ResetPasswordScreen />}
+      />
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/shipping" element={<ShippingScreen />} />

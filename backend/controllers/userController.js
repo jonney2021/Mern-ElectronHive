@@ -1,8 +1,10 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import EmailVerificationToken from "../models/emailVerificationToken.js";
+import PasswordResetToken from "../models/passwordResetToken.js";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 import { generateMailTransport, generateOTP } from "../utils/mail.js";
+import bcrypt from "bcryptjs";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -165,6 +167,129 @@ const logoutUser = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc Forgot password
+// @route POST /api/users/forgot-password
+// @access Public
+
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  // Check if there's already a password reset token for this user
+  const alreadyHasToken = await PasswordResetToken.findOne({ user: user._id });
+
+  if (alreadyHasToken) {
+    res.status(404);
+    throw new Error("Only after one hour you can request for another token!");
+  }
+
+  // Generate a random token
+  const token = generateRandomToken();
+
+  // Save the reset token to the PasswordResetToken model
+  const passwordResetToken = new PasswordResetToken({
+    user: user._id,
+    token,
+    expires: Date.now() + 10 * 60 * 1000, // 10 minutes
+  });
+
+  await passwordResetToken.save();
+
+  // Determine the reset link based on the environment (production or development)
+  const resetLink =
+    process.env.NODE_ENV === "production"
+      ? `https://electronhive.onrender.com/reset-password/${token}`
+      : `http://localhost:3000/reset-password/${token}`;
+
+  // Send the reset email
+  const resetEmailOptions = {
+    from: process.env.EMAIL_SENDER,
+    to: user.email,
+    subject: "Password Reset",
+    html: `
+      <p>You are receiving this email because you (or someone else) has requested the reset of the password for your account.</p>
+      <p>Please click on the following link or paste it into your browser to complete the process:</p>
+      <a href="${resetLink}">${resetLink}</a>
+      <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+    `,
+  };
+
+  const transport = generateMailTransport();
+  transport.sendMail(resetEmailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending password reset email:", error);
+      res.status(500).json({
+        message: "Error sending password reset email",
+        error: error.message, // Include the error message in the response
+      });
+    } else {
+      console.log("Password reset email sent:", info.response);
+      res.status(200).json({
+        message: "Password reset email sent",
+      });
+    }
+  });
+});
+
+function generateRandomToken() {
+  return Math.random().toString(36).substring(2);
+}
+
+// @desc Reset password
+// @route POST /api/users/reset-password/:resetToken
+// @access Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const resetToken = req.params.resetToken;
+  // const { password } = req.body;
+  const { password, confirmPassword } = req.body;
+
+  // Find the password reset token
+  const passwordResetToken = await PasswordResetToken.findOne({
+    token: resetToken,
+    expires: { $gt: Date.now() },
+  }).populate("user");
+
+  if (!passwordResetToken) {
+    res.status(400);
+    throw new Error("Invalid or expired reset token");
+  }
+
+  // Check if the new password is different from the old one
+  if (await passwordResetToken.user.matchPassword(password)) {
+    res.status(400);
+    throw new Error("New password must be different from the old one");
+  }
+
+  // Check if the new passwords match
+  if (password !== confirmPassword) {
+    res.status(400);
+    throw new Error("Passwords do not match");
+  }
+
+  const cryptedPassword = await bcrypt.hash(password, 12);
+  await User.updateOne(
+    { _id: passwordResetToken.user._id },
+    {
+      $set: {
+        password: cryptedPassword,
+      },
+    }
+  );
+
+  // Remove the password reset token from the database
+  await PasswordResetToken.deleteOne({ _id: passwordResetToken._id });
+
+  res.status(200).json({
+    message: "Password reset successful",
+  });
+});
+
 // @desc Get user profile
 // @route GET /api/users/profile
 // @access Purivate
@@ -284,4 +409,6 @@ export {
   getUserByID,
   deleteUser,
   updateUser,
+  forgotPassword,
+  resetPassword,
 };
