@@ -11,8 +11,8 @@ export const generateOTP = (otp_length = 6) => {
   return OTP;
 };
 
-// Mailtrap
 export const generateMailTransport = () => {
+  // SendGrid
   if (process.env.NODE_ENV === "production") {
     return nodemailer.createTransport(
       sendgridTransport({
@@ -23,6 +23,7 @@ export const generateMailTransport = () => {
     );
   }
 
+  // Mailtrap
   return nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
