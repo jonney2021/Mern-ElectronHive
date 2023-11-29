@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import sendgridTransport from "nodemailer-sendgrid-transport";
 
 export const generateOTP = (otp_length = 6) => {
   let OTP = "";
@@ -13,13 +14,13 @@ export const generateOTP = (otp_length = 6) => {
 // Mailtrap
 export const generateMailTransport = () => {
   if (process.env.NODE_ENV === "production") {
-    return nodemailer.createTransport({
-      service: "SendGrid",
-      auth: {
-        user: process.env.SENDGRID_USERNAME,
-        pass: process.env.SENDGRID_PASSWORD,
-      },
-    });
+    return nodemailer.createTransport(
+      sendgridTransport({
+        auth: {
+          api_key: process.env.SENDGRID_KEY,
+        },
+      })
+    );
   }
 
   return nodemailer.createTransport({
